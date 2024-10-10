@@ -1,2 +1,10 @@
+# Specify additional index URL for PyTorch
+--extra-index-url https://download.pytorch.org/whl/cu124
+
 packaging
 ninja
+torch
+nvidia_cudnn_frontend
+
+# Git-based package
+git+https://github.com/NVIDIA/TransformerEngine.git@stable
