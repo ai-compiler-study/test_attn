@@ -5,6 +5,9 @@ packaging
 ninja
 torch
 nvidia_cudnn_frontend
+torchao
+protobuf
+sentencepiece
 
 # Git-based package
 git+https://github.com/NVIDIA/TransformerEngine.git@stable
