@@ -38,7 +38,10 @@ def compiled_xformers_flash_hopper(q, k, v):
         xformers.ops.fmha.flash3.FwOp,
         fullgraph=True,
         backend="inductor",
+        mode="max-autotune",
     )
+    softmax_scale = q.size(-1) ** -0.5
+
     return fmha.memory_efficient_attention_forward(  # noqa: E731
         q,
         k,
@@ -234,6 +237,26 @@ if __name__ == "__main__":
             for _ in range(test_iter):
                 with torch.no_grad():
                     attn_output_fa_v2_compiled = compiled_flash_attention_v2(q, k, v)
+
+        for _ in range(warmup_iter):
+            _ = fmha.memory_efficient_attention_forward(  # noqa: E731
+                    q,
+                    k,
+                    v,
+                    scale=softmax_scale,
+                    op=xformers.ops.fmha.cutlass.FwOp,
+                )
+        with time_with_cuda_event(
+            f"xformers_flash_attn_cutlass_fwd, kv_len={kv_len}", flops
+        ):
+            for _ in range(test_iter):
+                _ = fmha.memory_efficient_attention_forward(  # noqa: E731
+                    q,
+                    k,
+                    v,
+                    scale=softmax_scale,
+                    op=xformers.ops.fmha.cutlass.FwOp,
+                )
 
         for _ in range(warmup_iter):
             _ = compiled_xformers_flash_hopper(q, k, v)
