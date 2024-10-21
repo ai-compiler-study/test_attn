@@ -8,7 +8,6 @@ from hopper.flash_attn_interface import flash_attn_func as flash_attn_func_hoppe
 from torch.nn.attention import SDPBackend
 from torch.nn.attention._flex_attention import _flex_attention
 from transformer_engine.pytorch.attention import DotProductAttention
-import transformer_engine.pytorch as te
 from triton.ops import attention as attention_triton
 
 try:
@@ -166,7 +165,12 @@ if __name__ == "__main__":
 
     for kv_len in kv_lens:
         torch.cuda.empty_cache()
+        print(f"========== kv_len={kv_len} ==========")
 
+        """
+        FA -> (batch, seqlen, nheads, headdim)
+        Torch sdpa expects -> (batch, nheads, seqlen, headdim)
+        """
         q, k, v = get_qkv(
             batch_size, num_heads, q_len, kv_len, head_dim, mqa, layout="bhsd"
         )
