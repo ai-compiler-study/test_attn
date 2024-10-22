@@ -85,9 +85,18 @@ if __name__ == "__main__":
         dtype=dtype,
         requires_grad=False,
     ) # B, S, H, D
+    """
+    FA -> (batch, seqlen, nheads, headdim)
+    Torch sdpa expects -> (batch, nheads, seqlen, headdim)
 
-    attn_output_xformers_flash_hopper = compiled_xformers_flash_hopper(q, k, v)
+    ref: 
+        torch.functional: https://github.com/pytorch/pytorch/blob/8231180147a096a703d8891756068c89365292e0/torch/nn/functional.py#L5617
+    """
     attn_torch_ref = scaled_dot_product_attention(q, k, v)
+    q = q.permute(0, 2, 1, 3) # B, H, S, D
+    k = k.permute(0, 2, 1, 3) # B, H, S, D
+    v = v.permute(0, 2, 1, 3) # B, H, S, D
+    attn_output_xformers_flash_hopper = compiled_xformers_flash_hopper(q, k, v).permute(0, 2, 1, 3)
     print(attn_output_xformers_flash_hopper.shape)
     print(attn_torch_ref.shape)
     torch.allclose(attn_output_xformers_flash_hopper, attn_torch_ref, atol=ABS_TOL, rtol=REL_TOL)
