@@ -6,19 +6,22 @@ import torch
 from flash_attn.flash_attn_interface import flash_attn_func
 from hopper.flash_attn_interface import flash_attn_func as flash_attn_func_hopper
 from torch.nn.attention import SDPBackend
-from torch.nn.attention._flex_attention import _flex_attention
-from transformer_engine.pytorch.attention import DotProductAttention
+from torch.nn.attention.flex_attention import flex_attention
 from triton.ops import attention as attention_triton
 
 try:
     import xformers.ops
     import xformers.ops.fmha as fmha
+    from impl import flash3
 
     HAS_FLASH = True
 except BaseException:
     HAS_FLASH = False
 
-compiled_flex_attention = torch.compile(_flex_attention, dynamic=False)
+from impl.int_flashattention.flash_atten_int8 import attention_int8 as _attention_int8
+
+
+compiled_flex_attention = torch.compile(flex_attention, dynamic=False)
 
 def compiled_flash_attention_v2(q, k, v):
     #kv_len_max = 1024 * 12
@@ -34,7 +37,7 @@ def compiled_flash_attention_v2(q, k, v):
 
 def compiled_xformers_flash_hopper(q, k, v):
     xformers_flash3 = torch.compile(
-        xformers.ops.fmha.flash3.FwOp,
+        flash3.FwOp,
         fullgraph=True,
         backend="inductor",
         mode="max-autotune",
@@ -153,12 +156,36 @@ def get_qkv(
     return q, k, v
 
 
+def quant_pertoken(X):
+    X_max, _ = torch.abs(X).max(dim=-1)
+    X_scale = X_max / 127
+    ret = torch.round(X / X_scale[:, :, :, None]).to(torch.int8)
+    return ret, X_scale
+
+
+def quant_pertensor(X):
+    X_max, _ = torch.abs(X).max(dim=-1)
+    X_max, _ = torch.max(X_max, dim=-1)
+    X_scale = X_max / 127
+    ret = torch.round(X / X_scale[:, :, None, None]).to(torch.int8)
+    return ret, X_scale
+
+
+def attention_int8(q, k, v, softmax_scale):
+    q8, qs8 = quant_pertoken(q)
+    k8, ks8 = quant_pertoken(k)
+    # v8, vs8 = quant_pertensor(v)
+
+    x = _attention_int8(q8, k8, v, qs8, ks8, False, softmax_scale)
+    return x
+
+
 if __name__ == "__main__":
     batch_size = 1
     num_heads = 8
     head_dim = 128
-    q_len = 1024 * 12
-    kv_lens = [512, q_len]
+    q_len = 1024 * 8
+    kv_lens = [1024 * 8]
     warmup_iter = 10
     test_iter = 100
     mqa = False
@@ -215,19 +242,6 @@ if __name__ == "__main__":
         q, k, v = get_qkv(
             batch_size, num_heads, q_len, kv_len, head_dim, mqa, layout="sbhd"
         )
-        te_fused_attn = DotProductAttention(
-            num_attention_heads=num_heads,
-            kv_channels=head_dim,
-            qkv_format="bshd",
-            attn_mask_type="no_mask",
-            num_gqa_groups=1 if mqa else None,
-        )
-
-        for _ in range(warmup_iter):
-            _ = te_fused_attn(q, k, v)
-        with time_with_cuda_event(f"cudnn_attention_fwd, kv_len={kv_len}", flops):
-            for _ in range(test_iter):
-                attn_output_te = te_fused_attn(q, k, v)
 
         for _ in range(warmup_iter):
             _ = flash_attn_func(q, k, v)
@@ -281,4 +295,25 @@ if __name__ == "__main__":
         ):
             for _ in range(test_iter):
                 attn_output_fa_hopper, softmax_lse = flash_attn_func_hopper(q, k, v)
+
+        for _ in range(warmup_iter):
+            _ = attention_int8(q, k, v, softmax_scale=softmax_scale)
+        with time_with_cuda_event(
+                f"attention_int8, kv_len={kv_len}", flops
+        ):
+            for _ in range(test_iter):
+                _ = attention_int8(q, k, v, softmax_scale=softmax_scale)
+
+        q = q.to(torch.float8_e4m3fn)
+        k = k.to(torch.float8_e4m3fn)
+        v = v.to(torch.float8_e4m3fn)
+
+        for _ in range(warmup_iter):
+            _, _ = flash_attn_func_hopper(q, k, v)
+        with time_with_cuda_event(
+                f"flash_attn_func_hopper_fwd_fp8, kv_len={kv_len}", flops
+        ):
+            for _ in range(test_iter):
+                attn_output_fa_hopper, softmax_lse = flash_attn_func_hopper(q, k, v)
+
         torch.cuda.profiler.stop()

@@ -1,7 +1,6 @@
 import subprocess
 import os
 import sys
-from typing import Literal, Tuple
 
 import torch
 from torch.nn.functional import scaled_dot_product_attention
@@ -9,6 +8,7 @@ from torch.nn.functional import scaled_dot_product_attention
 try:
     import xformers.ops
     import xformers.ops.fmha as fmha
+    from impl import flash3
 
     HAS_FLASH = True
 except BaseException:
@@ -31,7 +31,7 @@ if op is fmha.flash3.FwOp and op.is_available():
 
 def compiled_xformers_flash_hopper(q, k, v):
     xformers_flash3 = torch.compile(
-        xformers.ops.fmha.flash3.FwOp,
+        flash3.FwOp,
         fullgraph=True,
         backend="inductor",
         mode="max-autotune",
