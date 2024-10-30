@@ -64,7 +64,7 @@ dtype_str = {
     torch.bfloat16: "bf16",
     torch.half: "fp16",
 }[dtype]
-sub_label = f"{dtype_str} {batch_size}-{seqlen_k}-{n_heads}-{head_dim}, p={p}"
+sub_label = f"{dtype_str}-{batch_size}-{seqlen_k}-{n_heads}-{head_dim}, p={p}"
 
 torch.cuda.synchronize()
 torch.cuda.reset_peak_memory_stats()
