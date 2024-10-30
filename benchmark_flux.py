@@ -62,15 +62,21 @@ def _compile_transformer_backbone(
     enable_torch_compile: bool,
     enable_nexfort: bool,
     fullgraph: bool = True,
-    verbose: bool = False,
+    debug: bool = False,
 ):
-    if verbose:
+    if debug:
         os.environ["TORCH_COMPILE_DEBUG"] = "1"
-        os.environ["TORCH_LOGS"] = "inductor,dynamo"
+        os.environ["TORCH_LOGS"] = "+inductor,dynamo"
+        inductor_config.debug = True
         # Whether to disable a progress bar for autotuning
         inductor_config.disable_progress = False 
         # Whether to enable printing the source code for each future
         inductor_config.verbose_progress = True
+        inductor_config.trace.enabled = True
+        inductor_config.trace.debug_log = True
+        inductor_config.trace.info_log = True
+        inductor_config.trace.graph_diagram = True  # INDUCTOR_POST_FUSION_SVG=1
+        inductor_config.trace.draw_orig_fx_graph = True  # INDUCTOR_ORIG_FX_SVG=1
 
     # torch._inductor.list_options()
     inductor_config.conv_1x1_as_mm = True  # treat 1x1 convolutions as matrix muls
@@ -121,7 +127,7 @@ def main(
     use_torch_compile: bool = True,
     fullgraph: bool = True,
     use_nexfort: bool = False,
-    verbose: bool = True,
+    debug: bool = True,
     iters: int = 10,
     seed: int = 42,
 ):
@@ -137,7 +143,7 @@ def main(
     transformer.to(memory_format=torch.channels_last)
     vae.to(memory_format=torch.channels_last)
 
-    if verbose:
+    if debug:
         transformer_params = (
             sum(p.numel() for p in pipeline.transformer.parameters() if p.requires_grad)
             / 1e9
@@ -150,7 +156,7 @@ def main(
             enable_torch_compile=use_torch_compile,
             enable_nexfort=use_nexfort,
             fullgraph=fullgraph,
-            verbose=verbose,
+            debug=debug,
         )
     if vae is not None and use_torch_compile:
         pipeline.vae = torch.compile(
