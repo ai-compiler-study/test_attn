@@ -75,15 +75,15 @@ def _compile_transformer_backbone(
         inductor_config.trace.enabled = True
         inductor_config.trace.debug_log = True
         inductor_config.trace.info_log = True
-        inductor_config.trace.graph_diagram = True  # INDUCTOR_POST_FUSION_SVG=1
-        inductor_config.trace.draw_orig_fx_graph = True  # INDUCTOR_ORIG_FX_SVG=1
+        #inductor_config.trace.graph_diagram = True  # INDUCTOR_POST_FUSION_SVG=1
+        #inductor_config.trace.draw_orig_fx_graph = True  # INDUCTOR_ORIG_FX_SVG=1
 
     # torch._inductor.list_options()
     inductor_config.conv_1x1_as_mm = True  # treat 1x1 convolutions as matrix muls
     inductor_config.max_autotune_gemm_backends = "ATEN,TRITON"
-    inductor_config.benchmark_kernel = True
 
-    inductor_config.triton.cudagraphs = True
+    # TORCHINDUCTOR_BENCHMARK_KERNEL: inductor_config.benchmark_kernel
+    # inductor_config.triton.cudagraphs = False
     # Tune the generated Triton kernels at compile time instead of first time they run
     # Setting to None means uninitialized
     #inductor_config.triton.autotune_at_compile_time = True
@@ -107,7 +107,7 @@ def _compile_transformer_backbone(
                     getattr(transformer, "forward"),
                     fullgraph=fullgraph,
                     backend="inductor",
-                    mode="max-autotune",
+                    mode="max-autotune-no-cudagraphs",
                 )
             setattr(transformer, "forward", optimized_transformer_forward)
         else:
@@ -160,7 +160,7 @@ def main(
         )
     if vae is not None and use_torch_compile:
         pipeline.vae = torch.compile(
-            vae, mode="max-autotune", fullgraph=True
+            vae, mode="max-autotune-no-cudagraphs", fullgraph=True
         )
 
     forward_time, _ = benchmark_torch_function(

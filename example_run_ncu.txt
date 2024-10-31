@@ -1,0 +1,2 @@
+sudo /usr/local/cuda-12.4/bin/ncu --target-processes all -k regex:tritton -c 1 --set full /home/antonio/anaconda3/envs/test-attn/bin/python ./targets/64/c64d2d25vftwi6gk2o42slabvfxsqb3mtdo6vhvnb7waixwir2ii.py
+wir2ii.py

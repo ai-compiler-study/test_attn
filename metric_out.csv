@@ -1,0 +1,26 @@
+model_name,kernel_name,kernel_category,size_hints,kernel_args_num_gb,latency_us_under_profiling,mem_bw_under_profiling,ncu_mem_accessed_gb,ncu_duration_us,ncu_mem_bw_gbps
+,triton_poi_fused_stack_9,pointwise,[524288],0.004156,15373.0,0.27,0.0008845925,16.93,52.25
+,triton_poi_fused_stack_10,pointwise,[524288],0.004156,19792.0,0.21,0.001021515,16.61,61.5
+,triton_red_fused__scaled_dot_product_flash_attention__to_copy_mean_mul_pow_28,reduction,"[131072, 128]",0.122696,15476.0,7.93,0.11522925,193.5,595.5
+,triton_poi_fused_gelu_21,pointwise,[8388608],0.025190,15741.0,1.6,0.0132152823,13.47,981.09
+,triton_red_fused_add_cat_mul_native_layer_norm_27,reduction,"[8192, 4096]",0.113535,15857.0,7.16,0.09146409999999999,68.77,1330.0
+,triton_red_fused_26,reduction,"[16384, 4096]",0.056666,15442.0,3.67,0.0571472,42.02,1360.0
+,triton_red_fused_add_4,reduction,"[4096, 4096]",0.056703,15323.0,3.7,0.05834160000000001,39.42,1480.0
+,triton_red_fused_add_mul_native_layer_norm_34,reduction,"[4096, 4096]",0.050369,19599.0,2.57,0.035003200000000005,20.96,1670.0
+,triton_red_fused_add_mul_native_layer_norm_6,reduction,"[4096, 4096]",0.050448,15808.0,3.19,0.0373632,22.24,1680.0
+,triton_poi_fused__scaled_dot_product_flash_attention__to_copy_add_cat_mul_14,pointwise,[16777216],0.122683,15291.0,8.02,0.12232,69.5,1760.0
+,triton_poi_fused_cat_13,pointwise,[16777216],0.057078,15579.0,3.66,0.0489967,27.07,1810.0
+,triton_red_fused_add_mul_native_layer_norm_31,reduction,"[8192, 4096]",0.113363,15578.0,7.28,0.09118180000000001,45.82,1990.0
+,triton_red_fused_add_mul_native_layer_norm_17,reduction,"[4096, 4096]",0.100786,15654.0,6.44,0.0837824,39.52,2120.0
+,triton_red_fused_add_mul_native_layer_norm_23,reduction,"[4096, 4096]",0.100780,15754.0,6.4,0.0861585,40.45,2130.0
+,triton_red_fused_add_mul_native_layer_norm_20,reduction,"[4096, 4096]",0.100891,15276.0,6.6,0.0793726,37.09,2140.0
+,triton_red_fused_29,reduction,"[16384, 4096]",0.226646,15809.0,14.34,0.22850640000000003,105.79,2160.0
+,triton_per_fused__to_copy_mean_pow_12,persistent_reduction,"[131072, 128]",0.025565,16033.000000000002,1.59,0.0288642,13.18,2190.0
+,triton_poi_fused_cat_30,pointwise,[134217728],0.283140,15496.0,18.27,0.273438,124.29,2200.0
+,triton_red_fused_5,reduction,"[32768, 4096]",0.453286,15244.0,29.73,0.4560525,202.69,2250.0
+,triton_red_fused_32,reduction,"[8192, 4096]",0.037779,15617.0,2.42,0.0381036,16.86,2260.0
+,triton_poi_fused_clone_16,pointwise,[16777216],0.056623,15170.0,3.73,0.04218,18.5,2280.0
+,triton_poi_fused_gelu_19,pointwise,[67108864],0.201351,15313.0,13.15,0.18668520000000002,79.78,2340.0
+,triton_red_fused_25,reduction,"[32768, 4096]",0.226646,15537.0,14.59,0.22721729999999998,95.07,2390.0
+,triton_poi_fused__scaled_dot_product_flash_attention__to_copy_cat_15,pointwise,[16777216],0.056623,15732.0,3.6,0.044915199999999995,18.56,2420.0
+,triton_poi_fused_add_mul_33,pointwise,[16777216],0.084996,15513.0,5.48,0.0729504,26.82,2720.0

@@ -1,0 +1,36 @@
+model_name,kernel_name,kernel_path,kernel_category,size_hints,reduction_hint,line_of_code,num_load,num_store,num_for_loop,num_atomic_add,num_args,xnumel,ynumel,rnumel,kernel_args_num_gb
+,triton_poi_fused_cat_0,./targets/64/c64d2d25vftwi6gk2o42slabvfxsqb3mtdo6vhvnb7waixwir2ii.py,pointwise,[256],,43,1,1,0,0,4,256,,,1.026000
+,triton_per_fused_1,./targets/5y/c5y3djqpxztmbeajwxfyahbbe2woxkgzwsulitx3vzydidddlm4g.py,persistent_reduction,"[4096, 256]",INNER,37,3,1,0,0,5,3072,,256,0.001586
+,triton_poi_fused_cat_2,./targets/me/cmelns5ggdklvi3ouslw43jx55ds6qw34q7t3zupsxyoinocj5ob.py,pointwise,[256],,44,1,1,0,0,4,256,,,1.028000
+,triton_per_fused_3,./targets/3v/c3vsyafer6a53dzmv3mgmusqssolaxt2tzafnw3g2v7x6if2honz.py,persistent_reduction,"[4096, 1024]",INNER,22,2,1,0,0,5,3072,,768,0.004732
+,triton_red_fused_add_4,./targets/ta/cta2up2cam5w6rrzqir3o5ls7sotqfy4alq7p7mkthitubpwvabl.py,reduction,"[4096, 4096]",INNER,75,12,1,1,0,17,3072,,3072,0.056703
+,triton_red_fused_5,./targets/a5/ca5z7onu2yc5ygpmwv3idwl4clygae6zdneiqdghqw6l22c45qsp.py,reduction,"[32768, 4096]",INNER,54,5,4,1,0,13,18432,,3072,0.453286
+,triton_red_fused_add_mul_native_layer_norm_6,./targets/mz/cmz7cexejyihluymt6h4m2ry47uh3rtrwpxtew6bxtxhbgr5qmpa.py,reduction,"[4096, 4096]",INNER,61,8,1,2,0,9,4096,,3072,0.050448
+,triton_red_fused_add_mul_native_layer_norm_7,./targets/gi/cgijymhyga3bc47qphpq3dk65o5hyqebyjy3qzrnydhxjbsfaspu.py,reduction,"[512, 4096]",INNER,61,8,1,2,0,9,512,,3072,0.006408
+,triton_poi_fused_stack_8,./targets/z3/cz3ya5bkbkkjx2x42xdgbiyc3qxczlsdcd7hprqmhnw524c26ukq.py,pointwise,[262144],,103,8,1,0,0,5,147456,,,0.001207
+,triton_poi_fused_stack_9,./targets/4q/c4qkc6prla7xs6x7lp7jxprhkmchgqtevxzzq63phdcpvrqrftef.py,pointwise,[524288],,103,8,1,0,0,5,516096,,,0.004156
+,triton_poi_fused_stack_10,./targets/og/cogdria3ez66ayyu6i2aulotftagorirjzntty4yhrhwqgjq6qsv.py,pointwise,[524288],,103,8,1,0,0,5,516096,,,0.004156
+,triton_per_fused__to_copy_mean_pow_11,./targets/3h/c3hy4c5glrbdaznqzkff4m3pkk5g2uqzcwywisdef4yfu4vf3gwp.py,persistent_reduction,"[16384, 128]",INNER,22,2,1,0,0,6,12288,,128,0.003201
+,triton_per_fused__to_copy_mean_pow_12,./targets/a7/ca7r532q6fqwa2rilgpadq7xrqbjeeprv4ia67tjmz5o2ejupv7y.py,persistent_reduction,"[131072, 128]",INNER,22,2,1,0,0,6,98304,,128,0.025565
+,triton_poi_fused_cat_13,./targets/6w/c6w77clyycb3h57v42kiyupez2tq2t3p2c7fpixxsihfoqbb2zwc.py,pointwise,[16777216],,50,8,1,0,0,11,14155776,,,0.057078
+,triton_poi_fused__scaled_dot_product_flash_attention__to_copy_add_cat_mul_14,./targets/le/clefwxigaluan4nczskj4k6fd3ulojydmgc2cgxii3eoyji435pv.py,pointwise,[16777216],,68,10,2,0,0,9,14155776,,,0.122683
+,triton_poi_fused__scaled_dot_product_flash_attention__to_copy_cat_15,./targets/bw/cbwa34tnspnol3fcsduwc6h7ngyc3sezqkpwnz3a6trn67alwy37.py,pointwise,[16777216],,25,2,1,0,0,5,14155776,,,0.056623
+,triton_poi_fused_clone_16,./targets/xe/cxes4m7z72vsg4ezgpy5jso3kr3b5wq4atpsplziehvfefxfbbfr.py,pointwise,[16777216],,11,1,1,0,0,4,14155776,,,0.056623
+,triton_red_fused_add_mul_native_layer_norm_17,./targets/5i/c5iz442phl57erau7hyfjzebid5vtfgeesjwdghwvb2beytu5jyy.py,reduction,"[4096, 4096]",INNER,69,11,2,2,0,11,4096,,3072,0.100786
+,triton_red_fused_add_mul_native_layer_norm_18,./targets/wb/cwb5ar23wwuelhpvv352jlh4kihxrk54r6ocqgnd3wle2plmdcb2.py,reduction,"[512, 4096]",INNER,69,11,2,2,0,11,512,,3072,0.012706
+,triton_poi_fused_gelu_19,./targets/7q/c7qpeurhm5u3xi6tpdbxz52bkusdphdwiqb4uuc376lilaco3bl5.py,pointwise,[67108864],,26,2,1,0,0,4,50331648,,,0.201351
+,triton_red_fused_add_mul_native_layer_norm_20,./targets/pg/cpgoo3m742oj3k3t23ex36jznbu7iicj7odl7t3t5chqvlrow2ms.py,reduction,"[4096, 4096]",INNER,67,10,2,2,0,12,4096,,3072,0.100891
+,triton_poi_fused_gelu_21,./targets/ww/cww6tdynxmqkbryl4ejonalxj3phy3y2ncdwh6jaxuaz4hqzptkl.py,pointwise,[8388608],,26,2,1,0,0,4,6291456,,,0.025190
+,triton_red_fused_add_mul_native_layer_norm_22,./targets/zs/czs2dijxkhunozaoloregzy5j6m7m4vmtcxsnyqwwhbhaq6syvbf.py,reduction,"[512, 4096]",INNER,67,10,2,2,0,12,512,,3072,0.012810
+,triton_red_fused_add_mul_native_layer_norm_23,./targets/fp/cfpwo64m56iftaj5xwsdolg5b7e3lpo472s4iv3dnrdhtxxj4v5o.py,reduction,"[4096, 4096]",INNER,67,10,2,2,0,10,4096,,3072,0.100780
+,triton_red_fused_add_mul_native_layer_norm_24,./targets/tg/ctgnhlwpiahtrnp5t3h6ppdxx7qfar5mko4on6tiuyjd7jl4fr6o.py,reduction,"[512, 4096]",INNER,67,10,2,2,0,10,512,,3072,0.012700
+,triton_red_fused_25,./targets/zs/czsbmmfgkzkijwsdppu4k7giraennigsrpqz2dhvyayrqiuvtnre.py,reduction,"[32768, 4096]",INNER,36,3,2,1,0,9,18432,,3072,0.226646
+,triton_red_fused_26,./targets/2r/c2rxdryqboyj3z2mjq5qmpfmexh3oknh2s7bhalqghicdkydem2g.py,reduction,"[16384, 4096]",INNER,27,2,1,1,0,7,9216,,3072,0.056666
+,triton_red_fused_add_cat_mul_native_layer_norm_27,./targets/zt/cztewd5p5rqk6nj257d7yomxp55cy2vkjsvqjwrbrpgw4h5ii7wc.py,reduction,"[8192, 4096]",INNER,90,15,2,2,0,18,4608,,3072,0.113535
+,triton_red_fused__scaled_dot_product_flash_attention__to_copy_mean_mul_pow_28,./targets/bt/cbt3ild5aftbaa7m3tqvij4lxkti6too2f4veyctydzpnqguyjbu.py,reduction,"[131072, 128]",DEFAULT,133,22,2,2,0,15,110592,,128,0.122696
+,triton_red_fused_29,./targets/am/camgjjfskyxbh46nfflai6wjh7lrhu7kflqzj74fyrjxmbfaf74g.py,reduction,"[16384, 4096]",INNER,54,5,4,1,0,13,9216,,3072,0.226646
+,triton_poi_fused_cat_30,./targets/4z/c4z56yvn5ml7gfgetudnwyix4lynzlo3akyetoekni7pnxnn5bun.py,pointwise,[134217728],,41,3,1,0,0,6,70778880,,,0.283140
+,triton_red_fused_add_mul_native_layer_norm_31,./targets/zp/czpi63hte7m33l22qel72c6b5cnvib7cizxqb7tu4ul25jfdeuyd.py,reduction,"[8192, 4096]",INNER,67,10,2,2,0,12,4608,,3072,0.113363
+,triton_red_fused_32,./targets/ra/cra3brbdh663axvmahrvofaeebkqrojcqtn423c3d2s53wubea6h.py,reduction,"[8192, 4096]",INNER,27,2,1,1,0,7,6144,,3072,0.037779
+,triton_poi_fused_add_mul_33,./targets/r3/cr35lmsqutp6vnbrbpu7rzpk3y6ad2kzjoiybzwk4bkkzozwep2c.py,pointwise,[16777216],,18,5,1,0,0,7,14155776,,,0.084996
+,triton_red_fused_add_mul_native_layer_norm_34,./targets/py/cpytsettm6eaiuk3bja6nyd66fvwxml5aj7prffmopwajsipejuy.py,reduction,"[4096, 4096]",INNER,57,6,1,2,0,8,4096,,3072,0.050369
