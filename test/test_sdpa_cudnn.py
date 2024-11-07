@@ -2,6 +2,7 @@ from collections import namedtuple
 from functools import partial
 
 import torch
+from torch.nn.functional import scaled_dot_product_attention
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
 import triton.profiler as proton
@@ -16,6 +17,13 @@ torch.set_default_device("cuda")
 SdpaShape = namedtuple("Sdpa_Shape", ["batch", "num_heads", "seq_len", "head_dim"])
 Tolerances = namedtuple("Tolerances", ["atol", "rtol"])
 
+def compiled_sdpa():
+    return torch.compile(
+        scaled_dot_product_attention,
+        fullgraph=True,
+        backend="inductor",
+        mode="max-autotune",
+    )
 
 def warmup(iters: int, backend, f, *args, **kwargs) -> None:
     for _ in range(iters):
@@ -87,6 +95,16 @@ with proton.scope("torch_scaled_dot_product_attention", metrics={"flops": flops}
         query, key, value, attn_mask=None, dropout_p=0.0, is_causal=is_causal
     )
 # torch aten explict cuDNN op call
+for _ in range(warmup_iter):
+    _ = torch.ops.aten._scaled_dot_product_cudnn_attention(
+        query,
+        key,
+        value,
+        attn_bias=None,
+        compute_log_sumexp=False,
+        dropout_p=0.0,
+        is_causal=is_causal,
+    )
 with proton.scope(
     "torch.ops.aten._scaled_dot_product_cudnn_attention", metrics={"flops": flops}
 ):
@@ -99,6 +117,12 @@ with proton.scope(
         dropout_p=0.0,
         is_causal=is_causal,
     )
+# torch compiled sdpa
+for _ in range(warmup_iter):
+    _ = compiled_sdpa()(query, key, value, is_causal=is_causal)
+with proton.scope("torch_scaled_dot_product_attention_compiled", metrics={"flops": flops}):
+    flash_attention_compiled_op = compiled_sdpa()
+    attn_out_sdpa_compiled = flash_attention_compiled_op(query, key, value, is_causal=is_causal)
 # FlashAttention-3 Hopper
 for _ in range(warmup_iter):
     _, _ = flash_attn_func_hopper(query, key, value)
