@@ -69,14 +69,14 @@ def _compile_transformer_backbone(
         os.environ["TORCH_LOGS"] = "+inductor,dynamo"
         inductor_config.debug = True
         # Whether to disable a progress bar for autotuning
-        inductor_config.disable_progress = False 
+        inductor_config.disable_progress = False
         # Whether to enable printing the source code for each future
         inductor_config.verbose_progress = True
         inductor_config.trace.enabled = True
         inductor_config.trace.debug_log = True
         inductor_config.trace.info_log = True
-        #inductor_config.trace.graph_diagram = True  # INDUCTOR_POST_FUSION_SVG=1
-        #inductor_config.trace.draw_orig_fx_graph = True  # INDUCTOR_ORIG_FX_SVG=1
+        # inductor_config.trace.graph_diagram = True  # INDUCTOR_POST_FUSION_SVG=1
+        # inductor_config.trace.draw_orig_fx_graph = True  # INDUCTOR_ORIG_FX_SVG=1
 
     # torch._inductor.list_options()
     inductor_config.conv_1x1_as_mm = True  # treat 1x1 convolutions as matrix muls
@@ -86,8 +86,8 @@ def _compile_transformer_backbone(
     # inductor_config.triton.cudagraphs = False
     # Tune the generated Triton kernels at compile time instead of first time they run
     # Setting to None means uninitialized
-    #inductor_config.triton.autotune_at_compile_time = True
-    
+    # inductor_config.triton.autotune_at_compile_time = True
+
     inductor_config.cuda.compile_opt_level = "-O3"  # default: "-O1"
     inductor_config.cuda.use_fast_math = True
 
@@ -97,7 +97,7 @@ def _compile_transformer_backbone(
 
     if enable_torch_compile and enable_nexfort:
         logging.warning(
-            f"apply --use_torch_compile and --use_nexfort together. we use torch compile only"
+            f"apply --use_torch_compile {enable_torch_compile} and --use_nexfort {enable_nexfort} together. we use torch compile only"
         )
 
     if enable_torch_compile:

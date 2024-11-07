@@ -1,5 +1,5 @@
 # Specify additional index URL for PyTorch
---extra-index-url https://download.pytorch.org/whl/cu124
+--index-url https://download.pytorch.org/whl/nightly/cu124
 
 packaging
 ninja
@@ -8,6 +8,7 @@ nvidia_cudnn_frontend
 torchao
 protobuf
 sentencepiece
+llnl-hatchet
 
 # Git-based package
 git+https://github.com/NVIDIA/TransformerEngine.git@stable

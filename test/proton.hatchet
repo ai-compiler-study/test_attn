@@ -1,0 +1,136 @@
+
+[
+    {
+        "children": [
+            {
+                "children": [],
+                "frame": {
+                    "name": "_ZN13pytorch_flash16flash_fwd_kernelINS_23Flash_fwd_kernel_traitsILi128ELi128ELi64ELi4ELb0ELb0EN7cutlass10bfloat16_tENS_19Flash_kernel_traitsILi128ELi128ELi64ELi4ES3_EEEELb0ELb0ELb0ELb0ELb1ELb1ELb0EEEvNS_16Flash_fwd_paramsE",
+                    "type": "function"
+                },
+                "metrics": {
+                    "Count": 10,
+                    "DeviceId": "0",
+                    "DeviceType": "CUDA",
+                    "Time (ns)": 7808700
+                }
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "frame": {
+                            "name": "_ZN5flash15compute_attn_wsI23Flash_fwd_kernel_traitsILi128ELi128ELi176ELi12ELi2ELb0ELi1EN7cutlass10bfloat16_tEELb0ELb0ENS_29StaticPersistentTileSchedulerENS_12SeqLenTraitsILb0EEEEEvNS_21CollectiveMainloopFwdIT_XT0_EXT1_ET3_E6ParamsENS_21CollectiveEpilogueFwdIS9_SA_E6ParamsENT2_6ParamsESA_SA_",
+                            "type": "function"
+                        },
+                        "metrics": {
+                            "Count": 1,
+                            "DeviceId": "0",
+                            "DeviceType": "CUDA",
+                            "Time (ns)": 137736
+                        }
+                    }
+                ],
+                "frame": {
+                    "name": "flash_attention_hopper",
+                    "type": "function"
+                },
+                "metrics": {
+                    "flops": 260919263232
+                }
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "frame": {
+                            "name": "cudnn_generated_fort_native_sdpa_sm90_knob_7_64x128x128_4x1x1_kernel0_0",
+                            "type": "function"
+                        },
+                        "metrics": {
+                            "Count": 1,
+                            "DeviceId": "0",
+                            "DeviceType": "CUDA",
+                            "Time (ns)": 411224
+                        }
+                    }
+                ],
+                "frame": {
+                    "name": "torch.ops.aten._scaled_dot_product_cudnn_attention",
+                    "type": "function"
+                },
+                "metrics": {
+                    "flops": 260919263232
+                }
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "frame": {
+                            "name": "_ZN13pytorch_flash16flash_fwd_kernelINS_23Flash_fwd_kernel_traitsILi128ELi128ELi64ELi4ELb0ELb0EN7cutlass10bfloat16_tENS_19Flash_kernel_traitsILi128ELi128ELi64ELi4ES3_EEEELb0ELb0ELb0ELb0ELb1ELb1ELb0EEEvNS_16Flash_fwd_paramsE",
+                            "type": "function"
+                        },
+                        "metrics": {
+                            "Count": 1,
+                            "DeviceId": "0",
+                            "DeviceType": "CUDA",
+                            "Time (ns)": 779148
+                        }
+                    }
+                ],
+                "frame": {
+                    "name": "torch_scaled_dot_product_attention",
+                    "type": "function"
+                },
+                "metrics": {
+                    "flops": 260919263232
+                }
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "frame": {
+                            "name": "cudnn_generated_fort_native_sdpa_sm90_knob_7_64x128x128_4x1x1_kernel0_0",
+                            "type": "function"
+                        },
+                        "metrics": {
+                            "Count": 1,
+                            "DeviceId": "0",
+                            "DeviceType": "CUDA",
+                            "Time (ns)": 416247
+                        }
+                    }
+                ],
+                "frame": {
+                    "name": "torch_scaled_dot_product_cudnn_attention",
+                    "type": "function"
+                },
+                "metrics": {
+                    "flops": 260919263232
+                }
+            }
+        ],
+        "frame": {
+            "name": "ROOT",
+            "type": "function"
+        },
+        "metrics": {
+            "Count": 0,
+            "Time (ns)": 0,
+            "flops": 0
+        }
+    },
+    {
+        "CUDA": {
+            "0": {
+                "arch": "90",
+                "bus_width": 5120,
+                "clock_rate": 1980000,
+                "memory_clock_rate": 2619000,
+                "num_sms": 132
+            }
+        }
+    }
+]
