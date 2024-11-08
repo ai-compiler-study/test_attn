@@ -85,15 +85,7 @@ with proton.scope("torch_scaled_dot_product_cudnn_attention", metrics={"flops": 
         attn_out_sdpa_cudnn = torch.nn.functional.scaled_dot_product_attention(
             query, key, value, is_causal=is_causal
         )
-# torch sdpa native
-for _ in range(warmup_iter):
-    _ = torch.nn.functional.scaled_dot_product_attention(
-        query, key, value, attn_mask=None, dropout_p=0.0, is_causal=is_causal
-    )
-with proton.scope("torch_scaled_dot_product_attention", metrics={"flops": flops}):
-    attn_out_sdpa = torch.nn.functional.scaled_dot_product_attention(
-        query, key, value, attn_mask=None, dropout_p=0.0, is_causal=is_causal
-    )
+
 # torch aten explict cuDNN op call
 for _ in range(warmup_iter):
     _ = torch.ops.aten._scaled_dot_product_cudnn_attention(
@@ -117,13 +109,28 @@ with proton.scope(
         dropout_p=0.0,
         is_causal=is_causal,
     )
+
+# torch sdpa native
+for _ in range(warmup_iter):
+    _ = torch.nn.functional.scaled_dot_product_attention(
+        query, key, value, attn_mask=None, dropout_p=0.0, is_causal=is_causal
+    )
+with proton.scope("torch_scaled_dot_product_attention", metrics={"flops": flops}):
+    attn_out_sdpa = torch.nn.functional.scaled_dot_product_attention(
+        query, key, value, attn_mask=None, dropout_p=0.0, is_causal=is_causal
+    )
+
 # torch compiled sdpa
 for _ in range(warmup_iter):
     _ = compiled_sdpa()(query, key, value, is_causal=is_causal)
 with proton.scope("torch_scaled_dot_product_attention_compiled", metrics={"flops": flops}):
     flash_attention_compiled_op = compiled_sdpa()
     attn_out_sdpa_compiled = flash_attention_compiled_op(query, key, value, is_causal=is_causal)
+
 # FlashAttention-3 Hopper
+query = query.permute(0, 2, 1, 3) # B, H, S, D
+key = key.permute(0, 2, 1, 3) # B, H, S, D
+value = value.permute(0, 2, 1, 3) # B, H, S, D
 for _ in range(warmup_iter):
     _, _ = flash_attn_func_hopper(query, key, value)
 with proton.scope("flash_attention_hopper", metrics={"flops": flops}):
