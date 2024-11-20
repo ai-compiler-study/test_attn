@@ -1,0 +1,52 @@
+diff --git a/setup.py b/setup.py
+index 3bb2fe6..0604502 100644
+--- a/setup.py
++++ b/setup.py
+@@ -57,7 +57,14 @@ class TimedBdist(bdist_wheel):
+ 
+ def setup_common_extension() -> CMakeExtension:
+     """Setup CMake extension for common library"""
+-    cmake_flags = ["-DCMAKE_CUDA_ARCHITECTURES={}".format(cuda_archs())]
++    cmake_flags = [
++        "-DCMAKE_CUDA_ARCHITECTURES={}".format(cuda_archs()),
++        "-DCMAKE_INCLUDE_PATH=/opt/conda/lib/python3.11/site-packages/nvidia/cudnn/include",
++        "-DCUDNN_INCLUDE_DIR=/opt/conda/lib/python3.11/site-packages/nvidia/cudnn/include",
++        "-DCUDNN_LIBRARY=/opt/conda/lib/python3.11/site-packages/nvidia/cudnn/lib/libcudnn.so",
++        "-DCMAKE_CXX_FLAGS=-I/opt/conda/lib/python3.11/site-packages/nvidia/cudnn/include",
++        "-DCMAKE_CUDA_FLAGS=-I/opt/conda/lib/python3.11/site-packages/nvidia/cudnn/include",
++    ]
+     if bool(int(os.getenv("NVTE_UB_WITH_MPI", "0"))):
+         assert (
+             os.getenv("MPI_HOME") is not None
+diff --git a/transformer_engine/pytorch/attention.py b/transformer_engine/pytorch/attention.py
+index 3d72c6a..94503e9 100644
+--- a/transformer_engine/pytorch/attention.py
++++ b/transformer_engine/pytorch/attention.py
+@@ -183,7 +183,7 @@ _flash_attn_3_installation_steps = """\
+ (3) mkdir -p $python_path/flashattn_hopper
+ (4) wget -P $python_path/flashattn_hopper https://raw.githubusercontent.com/Dao-AILab/flash-attention/main/hopper/flash_attn_interface.py"""
+ try:
+-    _flash_attn_3_version = PkgVersion(get_pkg_version("flashattn-hopper"))
++    _flash_attn_3_version = PkgVersion(get_pkg_version("hopper"))
+ except PackageNotFoundError:
+     if torch.cuda.is_available() and get_device_compute_capability() >= (9, 0) and _NVTE_FLASH_ATTN:
+         fa_logger.debug(
+@@ -191,14 +191,14 @@ except PackageNotFoundError:
+             _flash_attn_3_installation_steps,
+         )
+ else:
+-    from flashattn_hopper.flash_attn_interface import flash_attn_func as flash_attn_func_v3
+-    from flashattn_hopper.flash_attn_interface import (
++    from hopper.flash_attn_interface import flash_attn_func as flash_attn_func_v3
++    from hopper.flash_attn_interface import (
+         flash_attn_varlen_func as flash_attn_varlen_func_v3,
+     )
+-    from flashattn_hopper.flash_attn_interface import (
++    from hopper.flash_attn_interface import (
+         _flash_attn_varlen_forward as flash_attn_varlen_fwd_v3,
+     )
+-    from flashattn_hopper.flash_attn_interface import (
++    from hopper.flash_attn_interface import (
+         _flash_attn_varlen_backward as flash_attn_varlen_bwd_v3,
+     )
+ 
