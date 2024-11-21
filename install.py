@@ -16,7 +16,7 @@ REPO_PATH = Path(os.path.abspath(__file__)).parent
 def install_fa2(compile=False):
     if compile:
         # compile from source (slow)
-        FA2_PATH = REPO_PATH.joinpath("submodules", "flash-attention")
+        FA2_PATH = REPO_PATH.joinpath("third_party", "flash-attention")
         cmd = [sys.executable, "setup.py", "install"]
         subprocess.check_call(cmd, cwd=str(FA2_PATH.resolve()))
     else:
@@ -26,14 +26,14 @@ def install_fa2(compile=False):
 
 
 def install_fa3():
-    FA3_PATH = REPO_PATH.joinpath("submodules", "flash-attention", "hopper")
+    FA3_PATH = REPO_PATH.joinpath("third_party", "flash-attention", "hopper")
     cmd = [sys.executable, "setup.py", "install"]
     subprocess.check_call(cmd, cwd=str(FA3_PATH.resolve()))
 
 def install_xformers():
     os_env = os.environ.copy()
     os_env["TORCH_CUDA_ARCH_LIST"] = "9.0;9.0a"
-    XFORMERS_PATH = REPO_PATH.joinpath("submodules", "xformers")
+    XFORMERS_PATH = REPO_PATH.joinpath("third_party", "xformers")
     cmd = ["pip", "install", "-e", XFORMERS_PATH]
     subprocess.check_call(cmd, env=os_env)
 
