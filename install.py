@@ -57,7 +57,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     # install framework dependencies
-    pip_install_requirements("requirements_docker.txt ")
+    pip_install_requirements("requirements_docker.txt")
     # checkout submodules
     checkout_submodules(REPO_PATH)
     # install submodules
