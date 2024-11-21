@@ -1,0 +1,6 @@
+packaging
+nvidia_cudnn_frontend
+torchao
+protobuf
+sentencepiece
+llnl-hatchet
