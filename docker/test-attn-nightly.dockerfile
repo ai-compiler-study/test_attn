@@ -47,17 +47,17 @@ RUN cd /workspace/test_attn && \
 RUN sudo apt update && sudo apt-get install -y libnvidia-compute-550 patchelf
 
 # Install test_attn
-RUN cd /workspace/tritonbench && \
-    bash .ci/tritonbench/install.sh
+RUN cd /workspace/test_attn && \
+    bash .ci/test_attn/install.sh
 
 
-# Test Tritonbench
-RUN cd /workspace/tritonbench && \
-    bash .ci/tritonbench/test-install.sh
+# Test test_attn
+RUN cd /workspace/test_attn && \
+    bash .ci/test_attn/test-install.sh
 
 # Remove NVIDIA driver library - they are supposed to be mapped at runtime
 RUN sudo apt-get purge -y libnvidia-compute-550
 
 # Clone the pytorch env as triton-main env, then compile triton main from source
-RUN cd /workspace/tritonbench && \
-    BASE_CONDA_ENV=${CONDA_ENV} CONDA_ENV=${CONDA_ENV_TRITON_MAIN} bash .ci/tritonbench/install-triton-main.sh
+RUN cd /workspace/test_attn && \
+    BASE_CONDA_ENV=${CONDA_ENV} CONDA_ENV=${CONDA_ENV_TRITON_MAIN} bash .ci/test_attn/install-triton-main.sh

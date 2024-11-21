@@ -10,5 +10,5 @@ protobuf
 sentencepiece
 llnl-hatchet
 
-# Git-based package
-git+https://github.com/NVIDIA/TransformerEngine.git@stable
+# Git-based package: not working
+# git+https://github.com/NVIDIA/TransformerEngine.git@stable
