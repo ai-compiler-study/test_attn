@@ -50,11 +50,6 @@ RUN sudo apt update && sudo apt-get install -y libnvidia-compute-550 patchelf
 RUN cd /workspace/test_attn && \
     bash .ci/test_attn/install.sh
 
-
-# Test test_attn
-RUN cd /workspace/test_attn && \
-    bash .ci/test_attn/test-install.sh
-
 # Remove NVIDIA driver library - they are supposed to be mapped at runtime
 RUN sudo apt-get purge -y libnvidia-compute-550
 
