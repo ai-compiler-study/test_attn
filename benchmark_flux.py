@@ -7,8 +7,12 @@ import torch
 import torch.nn as nn
 import torch._inductor.config as inductor_config
 
+import nexfort
+
 from diffusers.pipelines.flux.pipeline_flux import FluxPipeline
 
+os.environ["NEXFORT_FUSE_TIMESTEP_EMBEDDING"] = "0"
+os.environ["NEXFORT_FX_FORCE_TRITON_SDPA"] = "1"
 #torch.backends.cuda.matmul.allow_tf32 = True
 #torch.backends.cudnn.allow_tf32 = True
 #torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = False
@@ -100,19 +104,18 @@ def _compile_transformer_backbone(
     inductor_config.epilogue_fusion = False  # do not fuse pointwise ops into matmuls
 
     if enable_torch_compile and enable_nexfort:
-        logging.warning(
-            f"apply --use_torch_compile {enable_torch_compile} and --use_nexfort {enable_nexfort} together. we use torch compile only"
+        logging.error(
+            f"can't apply --use_torch_compile {enable_torch_compile} and --use_nexfort {enable_nexfort} together."
         )
 
     if enable_torch_compile:
         if getattr(transformer, "forward") is not None:
-            if enable_torch_compile:
-                optimized_transformer_forward = torch.compile(
-                    getattr(transformer, "forward"),
-                    fullgraph=fullgraph,
-                    backend="inductor",
-                    mode="max-autotune-no-cudagraphs",
-                )
+            optimized_transformer_forward = torch.compile(
+                getattr(transformer, "forward"),
+                fullgraph=fullgraph,
+                backend="inductor",
+                mode="max-autotune-no-cudagraphs",
+            )
             setattr(transformer, "forward", optimized_transformer_forward)
         else:
             raise AttributeError(
@@ -162,6 +165,11 @@ def main(
             fullgraph=fullgraph,
             debug=debug,
         )
+    if use_nexfort:
+        from nexfort.compilers import transform
+
+        pipeline.transformer = transform(pipeline.transformer)
+        pipeline.text_encoder_2 = transform(pipeline.text_encoder_2)
     if vae is not None and use_torch_compile:
         pipeline.vae = torch.compile(
             vae, mode="max-autotune-no-cudagraphs", fullgraph=True
