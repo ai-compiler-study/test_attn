@@ -9,6 +9,10 @@ import torch._inductor.config as inductor_config
 
 from diffusers.pipelines.flux.pipeline_flux import FluxPipeline
 
+#torch.backends.cuda.matmul.allow_tf32 = True
+#torch.backends.cudnn.allow_tf32 = True
+#torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = False
+
 torch.set_default_device("cuda")
 app = typer.Typer()
 
